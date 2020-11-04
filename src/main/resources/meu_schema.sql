@@ -1,3 +1,5 @@
+//schema.sql foi renomeado para meu_schema.sql
+
 CREATE TABLE CLIENTE (
     ID INTEGER PRIMARY KEY AUTO_INCREMENT,
     NOME VARCHAR(100)

@@ -1,6 +1,18 @@
 package com.udemy.project.domain.entity;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "cliente")
 public class Cliente {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
+    private Integer id;
+
+    @Column(name = "nome", length = 100)
+    private String nome;
 
     public Cliente() {
     }
@@ -13,9 +25,6 @@ public class Cliente {
         this.id = id;
         this.nome = nome;
     }
-
-    private Integer id;
-    private String nome;
 
     public Integer getId() {
         return id;
