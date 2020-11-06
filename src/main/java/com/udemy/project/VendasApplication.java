@@ -20,10 +20,8 @@ public class VendasApplication {
             clientes.save(new Cliente("Douglas"));
             clientes.save(new Cliente("outro cliente"));
 
-            boolean existeDouglas = clientes.existsByNome("Douglas");
-            System.out.println("Existe um cliente com nome Douglas? " + existeDouglas);
-            boolean existeFulano = clientes.existsByNome("Fulano");
-            System.out.println("Existe um cliente com nome Fulano? " + existeFulano);
+           List<Cliente> result = clientes.encontrarPorNome("%cliente%");
+           result.forEach(System.out::println);
 
         };
     }
