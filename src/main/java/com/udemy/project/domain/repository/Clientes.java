@@ -1,4 +1,4 @@
-package com.udemy.project.domain.repositorio;
+package com.udemy.project.domain.repository;
 
 import com.udemy.project.domain.entity.Cliente;
 import org.springframework.data.jpa.repository.JpaRepository;

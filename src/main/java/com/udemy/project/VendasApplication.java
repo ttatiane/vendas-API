@@ -1,7 +1,7 @@
 package com.udemy.project;
 
 import com.udemy.project.domain.entity.Cliente;
-import com.udemy.project.domain.repositorio.Clientes;
+import com.udemy.project.domain.repository.Clientes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
