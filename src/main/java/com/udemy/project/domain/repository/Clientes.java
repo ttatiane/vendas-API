@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface Clientes extends JpaRepository<Cliente, Integer> {
+public interface Clientes extends JpaRepository< Cliente, Integer > {
 
     //Query Methods convention
     //select c from Cliente c where c.nome like :nome
@@ -31,5 +31,9 @@ public interface Clientes extends JpaRepository<Cliente, Integer> {
     void deleteByNome(String nome);
 
     boolean existsByNome(String nome);
+
+    @Query(" select c from Cliente c left join fetch c.pedidos p where c.id = :id ")
+    Cliente findClienteFetchPedidos( @Param("id") Integer id );
+
 
 }
