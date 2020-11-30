@@ -22,8 +22,8 @@ public class VendasApplication {
                                   @Autowired Pedidos pedidos) {
         return args -> {
             System.out.println("\nSalvando clientes ================== ");
-            Cliente fulano = clientes.save(new Cliente("Fulano"));
-            clientes.save(new Cliente("outro cliente"));
+            Cliente fulano = new Cliente("Fulano");
+            clientes.save(fulano);
 
             Pedido p = new Pedido();
             p.setCliente(fulano);
@@ -32,9 +32,9 @@ public class VendasApplication {
             pedidos.save(p);
 
             //Obtem os pedidos, passando o codigo do cliente como parametro
-//            Cliente clienteFetchPedidos = clientes.findClienteFetchPedidos(fulano.getId());
-//            System.out.println(clienteFetchPedidos);
-//            System.out.println(clienteFetchPedidos.getPedidos());
+            Cliente clienteFetchPedidos = clientes.findClienteFetchPedidos(fulano.getId());
+            System.out.println(clienteFetchPedidos);
+            System.out.println(clienteFetchPedidos.getPedidos());
 
             //Obtem os pedidos, passando o cliente como parametro
             pedidos.findByCliente(fulano).forEach(System.out::println);
