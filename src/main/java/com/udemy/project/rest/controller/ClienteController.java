@@ -1,24 +1,36 @@
 package com.udemy.project.rest.controller;
 
+import com.udemy.project.domain.entity.Cliente;
+import com.udemy.project.domain.repository.Clientes;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/api/clientes")
 public class ClienteController {
 
-    @RequestMapping(
-            value = {"/hello/{nome}", "ola/{nome}"},
-            method = RequestMethod.GET
-//            consumes = { "application/json", "application/xml" },
-//            produces = { "application/json", "application/xml" }
-    )
+    private Clientes clientes;
+
+    public ClienteController(Clientes clientes) {
+        this.clientes = clientes;
+    }
+
+    @GetMapping( "/{id}" )
     @ResponseBody
-    public String helloCliente( @PathVariable("nome") String nomeCliente ) {
-        return String.format("Hello %s", nomeCliente);
+    public ResponseEntity<Cliente> getClienteById( @PathVariable("id") Integer id ) {
+        Optional<Cliente> cliente = clientes.findById(id);
+        if (cliente.isPresent()) {
+            //ResponseEntity<Cliente> responseEntity = new ResponseEntity<>(cliente.get(), HttpStatus.OK);
+            return ResponseEntity.ok(cliente.get()); // script simplificado do retorno de resposta acima
+        }
+        return ResponseEntity.notFound().build();
     }
 
 }
