@@ -1,7 +1,7 @@
 package com.udemy.project.rest.controller;
 
 import com.udemy.project.domain.entity.Cliente;
-import com.udemy.project.domain.repository.Clientes;
+import com.udemy.project.domain.repository.ClientesRepository;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
@@ -14,9 +14,9 @@ import java.util.List;
 @RequestMapping("/api/clientes")
 public class ClienteController {
 
-    private Clientes clientes;
+    private ClientesRepository clientes;
 
-    public ClienteController(Clientes clientes) {
+    public ClienteController(ClientesRepository clientes) {
         this.clientes = clientes;
     }
 
