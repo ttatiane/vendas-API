@@ -4,10 +4,12 @@ import com.udemy.project.domain.entity.Cliente;
 import com.udemy.project.domain.entity.ItemPedido;
 import com.udemy.project.domain.entity.Pedido;
 import com.udemy.project.domain.entity.Produto;
+import com.udemy.project.domain.enums.StatusPedido;
 import com.udemy.project.domain.repository.ClientesRepository;
 import com.udemy.project.domain.repository.ItensPedidoRepository;
 import com.udemy.project.domain.repository.PedidosRepository;
 import com.udemy.project.domain.repository.ProdutosRepository;
+import com.udemy.project.exception.PedidoNaoEncontradoException;
 import com.udemy.project.exception.RegraNegocioException;
 import com.udemy.project.rest.dto.ItemPedidoDTO;
 import com.udemy.project.rest.dto.PedidoDTO;
@@ -42,6 +44,7 @@ public class PedidoServiceImpl implements PedidoService {
         pedidoPopulado.setTotal(pedidoDTO.getTotal());
         pedidoPopulado.setDataPedido(LocalDate.now());
         pedidoPopulado.setCliente(clienteEncontrado);
+        pedidoPopulado.setStatus(StatusPedido.REALIZADO);
 
         List<ItemPedido> itemPedidosConvertidos = converterItems(pedidoPopulado, pedidoDTO.getItems());
         pedidosRepository.save(pedidoPopulado);
@@ -53,6 +56,17 @@ public class PedidoServiceImpl implements PedidoService {
     @Override
     public Optional<Pedido> obterPedidoCompleto(Integer id) {
         return pedidosRepository.findByIdFetchItens(id);
+    }
+
+    @Override
+    @Transactional
+    public void atualizaStatus(Integer id, StatusPedido statusPedido) {
+        pedidosRepository
+                .findById(id)
+                .map( pedido -> {
+                    pedido.setStatus(statusPedido);
+                    return pedidosRepository.save(pedido);
+                } ).orElseThrow( () -> new PedidoNaoEncontradoException() );
     }
 
     private List<ItemPedido> converterItems(Pedido pedido, List<ItemPedidoDTO> itemPedidoDTOS) {

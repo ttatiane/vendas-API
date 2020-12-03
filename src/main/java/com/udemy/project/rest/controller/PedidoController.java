@@ -2,6 +2,8 @@ package com.udemy.project.rest.controller;
 
 import com.udemy.project.domain.entity.ItemPedido;
 import com.udemy.project.domain.entity.Pedido;
+import com.udemy.project.domain.enums.StatusPedido;
+import com.udemy.project.rest.dto.AtualizacaoStatusPedidoDTO;
 import com.udemy.project.rest.dto.InformacaoItemPedidoDTO;
 import com.udemy.project.rest.dto.InformacoesPedidoDTO;
 import com.udemy.project.rest.dto.PedidoDTO;
@@ -24,7 +26,6 @@ public class PedidoController {
 
     public PedidoController(PedidoService pedidoService) {
         this.pedidoService = pedidoService;
-
     }
 
     @PostMapping
@@ -41,6 +42,14 @@ public class PedidoController {
                 .orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido não encontrado"));
     }
 
+    @PatchMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateStatus(@PathVariable Integer id,
+                             @RequestBody AtualizacaoStatusPedidoDTO dto) {
+        String novoStatus = dto.getNovoStatus();
+        pedidoService.atualizaStatus(id, StatusPedido.valueOf(novoStatus));
+    }
+
     private InformacoesPedidoDTO converter(Pedido pedido) {
         return InformacoesPedidoDTO
                 .builder()
@@ -49,6 +58,7 @@ public class PedidoController {
                 .cpf(pedido.getCliente().getCpf())
                 .nomeCliente(pedido.getCliente().getNome())
                 .total(pedido.getTotal())
+                .status(pedido.getStatus().name())
                 .itemsPedidoDTOS(converter(pedido.getItens()))
                 .build();
     }

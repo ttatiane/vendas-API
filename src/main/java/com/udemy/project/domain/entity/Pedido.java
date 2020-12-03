@@ -1,5 +1,6 @@
 package com.udemy.project.domain.entity;
 
+import com.udemy.project.domain.enums.StatusPedido;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,14 +25,17 @@ public class Pedido {
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
-    @OneToMany(mappedBy = "pedido")
-    // o SET evita repetição e é o mais indicado, o LIST está inserido neste contexto didaticamente
-    private List<ItemPedido> itens;
-
     @Column(name = "data_pedido")
     private LocalDate dataPedido;
 
     @Column(name = "total", precision = 20, scale = 2)
     private BigDecimal total;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private StatusPedido status;
+
+    @OneToMany(mappedBy = "pedido")
+    // o SET evita repetição e é o mais indicado, o LIST está inserido neste contexto didaticamente
+    private List<ItemPedido> itens;
 }
