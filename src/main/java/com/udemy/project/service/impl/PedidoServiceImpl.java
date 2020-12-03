@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,8 +46,13 @@ public class PedidoServiceImpl implements PedidoService {
         List<ItemPedido> itemPedidosConvertidos = converterItems(pedidoPopulado, pedidoDTO.getItems());
         pedidosRepository.save(pedidoPopulado);
         itensPedidoRepository.saveAll(itemPedidosConvertidos);
-        pedidoPopulado.setItemPedidos(itemPedidosConvertidos);
+        pedidoPopulado.setItens(itemPedidosConvertidos);
         return pedidoPopulado;
+    }
+
+    @Override
+    public Optional<Pedido> obterPedidoCompleto(Integer id) {
+        return pedidosRepository.findByIdFetchItens(id);
     }
 
     private List<ItemPedido> converterItems(Pedido pedido, List<ItemPedidoDTO> itemPedidoDTOS) {

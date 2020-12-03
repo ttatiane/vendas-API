@@ -26,7 +26,7 @@ public class Pedido {
 
     @OneToMany(mappedBy = "pedido")
     // o SET evita repetição e é o mais indicado, o LIST está inserido neste contexto didaticamente
-    private List<ItemPedido> itemPedidos;
+    private List<ItemPedido> itens;
 
     @Column(name = "data_pedido")
     private LocalDate dataPedido;
