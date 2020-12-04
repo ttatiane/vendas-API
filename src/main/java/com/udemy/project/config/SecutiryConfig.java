@@ -17,12 +17,18 @@ public class SecutiryConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
+    // authentication
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        super.configure(auth);  // authentication
+        auth.inMemoryAuthentication()
+                .passwordEncoder(passwordEncoder())
+                .withUser("fulano")
+                .password(passwordEncoder().encode("123"))
+                .roles("USER"); // perfil de usuário
     }
 
     @Override
+    // authorization
     protected void configure(HttpSecurity http) throws Exception {
-        super.configure(http);  // authorization
+        super.configure(http);
     }
 }
