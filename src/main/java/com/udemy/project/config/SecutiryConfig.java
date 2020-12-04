@@ -23,12 +23,20 @@ public class SecutiryConfig extends WebSecurityConfigurerAdapter {
                 .passwordEncoder(passwordEncoder())
                 .withUser("fulano")
                 .password(passwordEncoder().encode("123"))
-                .roles("USER"); // perfil de usuário
+                .roles("USER", "ADMIN"); // perfil de usuário
     }
 
     @Override
     // authorization
     protected void configure(HttpSecurity http) throws Exception {
-        super.configure(http);
+        http
+            .csrf().disable()   // csfr, configuração de segurança entre app web e backend, como estamos usando api rest (stateless) não é necessário
+            .authorizeRequests()
+                .antMatchers("/api/clientes/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/api/pedidos/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/api/produtos/**").hasAnyRole("ADMIN")
+        .and()
+            .formLogin();
+
     }
 }
