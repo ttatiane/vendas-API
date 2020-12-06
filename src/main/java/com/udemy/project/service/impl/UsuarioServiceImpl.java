@@ -2,6 +2,7 @@ package com.udemy.project.service.impl;
 
 import com.udemy.project.domain.entity.Usuario;
 import com.udemy.project.domain.repository.UsuarioRepository;
+import com.udemy.project.exception.SenhaInvalidaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +23,15 @@ public class UsuarioServiceImpl implements UserDetailsService {
     @Transactional
     public Usuario salvar(Usuario usuario) {
         return usuarioRepository.save(usuario);
+    }
+
+    public UserDetails autenticar( Usuario usuarioRequerDetails ) {
+        UserDetails userSavedDataBaseDetails = loadUserByUsername(usuarioRequerDetails.getLogin());
+        boolean senhasMatches = encoder.matches(usuarioRequerDetails.getSenha(), userSavedDataBaseDetails.getPassword());
+        if( senhasMatches ) {
+            return userSavedDataBaseDetails;
+        }
+        throw new SenhaInvalidaException();
     }
 
     @Override
