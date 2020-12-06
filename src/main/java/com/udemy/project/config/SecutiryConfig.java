@@ -1,5 +1,7 @@
 package com.udemy.project.config;
 
+import com.udemy.project.security.jwt.JwtAuthFilter;
+import com.udemy.project.security.jwt.JwtService;
 import com.udemy.project.service.impl.UsuarioServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -8,18 +10,28 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 @EnableWebSecurity
 public class SecutiryConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UsuarioServiceImpl usuarioService;
+    @Autowired
+    private JwtService jwtService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(); // gera hash diferente a cada solicitação
+    }
+
+    @Bean
+    public OncePerRequestFilter jwtAuthFilter() {
+        return new JwtAuthFilter(jwtService, usuarioService);
     }
 
     @Override
@@ -42,7 +54,9 @@ public class SecutiryConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/usuarios/**").permitAll()
                 .anyRequest().authenticated()
         .and()
-            .httpBasic();
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and()
+            .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class);
 
     }
 }
